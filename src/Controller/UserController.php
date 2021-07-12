@@ -13,6 +13,20 @@
          */
         public function index(): Response {
             $em = $this->getDoctrine()->getManager();
+            $repo = $em->getRepository(User::class);
+            
+            $tony = $repo->findOneBy(['name' => 'Tony Stark']);
+            if(!$tony) {
+                throw $this->createNotFoundException(
+                    'No user found with name: Tony'
+                );
+            }
+            $em->remove($tony);
+            
+            $em->flush();
+            
+            dump($tony);
+            
             return $this->render('user/index.html.twig', [
                 'controller_name' => 'UserController',
             ]);
