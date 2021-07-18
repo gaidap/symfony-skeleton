@@ -13,22 +13,21 @@
          */
         public function index(): Response {
             $em = $this->getDoctrine()->getManager();
-            $repo = $em->getRepository(User::class);
+            $conn = $em->getConnection();
             
-            $tony = $repo->findOneBy(['name' => 'Tony Stark']);
-            if(!$tony) {
-                throw $this->createNotFoundException(
-                    'No user found with name: Tony'
-                );
-            }
-            $em->remove($tony);
+            $sql = '
+                SELECT * FROM "user" u
+                WHERE u.id = :id
+            ';
             
-            $em->flush();
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(['id' => 4]);
             
-            dump($tony);
+            $user = $stmt->fetchAll();
             
             return $this->render('user/index.html.twig', [
                 'controller_name' => 'UserController',
+                'user' => $user[0]
             ]);
         }
         
