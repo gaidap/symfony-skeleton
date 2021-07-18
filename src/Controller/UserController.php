@@ -4,30 +4,19 @@
     
     use App\Entity\User;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
 
     class UserController extends AbstractController {
         /**
-         * @Route("/user", name="user")
+         * @Route("/user/{id}", name="user")
          */
-        public function index(): Response {
-            $em = $this->getDoctrine()->getManager();
-            $conn = $em->getConnection();
-            
-            $sql = '
-                SELECT * FROM "user" u
-                WHERE u.id = :id
-            ';
-            
-            $stmt = $conn->prepare($sql);
-            $stmt->execute(['id' => 4]);
-            
-            $user = $stmt->fetchAll();
-            
+        public function index(Request $request, User $user): Response {
+            dump($user);
             return $this->render('user/index.html.twig', [
                 'controller_name' => 'UserController',
-                'user' => $user[0]
+                'user' => $user
             ]);
         }
         
