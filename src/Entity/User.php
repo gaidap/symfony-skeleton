@@ -40,6 +40,11 @@ class User
      */
     private $users;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     */
+    private $partner;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
@@ -141,6 +146,18 @@ class User
         if ($this->users->removeElement($user)) {
             $user->removeFollower($this);
         }
+
+        return $this;
+    }
+
+    public function getPartner(): ?self
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?self $partner): self
+    {
+        $this->partner = $partner;
 
         return $this;
     }
