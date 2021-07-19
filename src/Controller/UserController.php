@@ -16,22 +16,19 @@
             dump($user);
             return $this->render('user/index.html.twig', [
                 'controller_name' => 'UserController',
-                'user' => $user
+                'users' => [$user]
             ]);
         }
         
         /**
-         * @Route("/createUser", name="createUser")
+         * @Route("/allUsers", name="allUsers")
          */
-        public function createUser(): Response {
-            $em = $this->getDoctrine()->getManager();
-            $newUser = new User();
-            $newUser->setName('Peter');
-            $em->persist($newUser);
-            $em->flush();
-            dump('New user was created with id of' . $newUser->getId());
+        public function allUsers(): Response {
+            $repo = $this->getDoctrine()->getRepository(User::class);
+            $users = $repo->findAll();
             return $this->render('user/index.html.twig', [
                 'controller_name' => 'UserController',
+                'users' => $users
             ]);
         }
     }
